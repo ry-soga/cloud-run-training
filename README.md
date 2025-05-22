@@ -11,8 +11,8 @@ $ git clone https://github.com/xxxxx/cloud-run-training.git
 ## GitHubの設定
 
 ```bash
-$ git config user.name {GitHubのアカウント名}
-$ git config user.email {GitHubのemail}
+$ git config user.name ry-soga
+$ git config user.email ry-soga@yachiyo-eng.co.jp
 ```
 
 ## イメージの作成
@@ -33,6 +33,8 @@ $ docker images
 $ docker run -p 8080:8080 -v $(pwd)/app:/app -e DEBUG=true ws-flask-app:local
 ```
 
+http://0.0.0.0:8081
+
 ## Artifact Registry にイメージをアップ
 
 ### イメージのパスを構成
@@ -50,7 +52,7 @@ asia-northeast1-docker.pkg.dev/xxxxxxxxxxx/repo-xxxxxx-xxxxxxxx/ws-flask-app:lat
 記入欄
 
 ```plain
-xxxxx/ws-flask-app:latest
+asia-northeast1-docker.pkg.dev/env95-cloudruntraining/repo-soga/ws-flask-app:latest
 ```
 
 ### イメージのビルド
@@ -68,7 +70,7 @@ $ docker build -t asia-northeast1-docker.pkg.dev/xxxxxxxxxxx/repo-xxxxxx-xxxxxxx
 記入欄
 
 ```plain
-docker build -t xxxxx/ws-flask-app:latest
+docker build -t asia-northeast1-docker.pkg.dev/env95-cloudruntraining/repo-soga/ws-flask-app:latest .
 ```
 
 作成したイメージをリポジトリに置く
@@ -86,7 +88,7 @@ $ docker push asia-northeast1-docker.pkg.dev/xxxxxxxxxxx/repo-xxxxxx-xxxxxxxx/ws
 記入欄
 
 ```plain
-docker push xxxxx/ws-flask-app:latest
+docker push asia-northeast1-docker.pkg.dev/env95-cloudruntraining/repo-soga/ws-flask-app:latest
 ```
 
 ## Cloud Runにデプロイ
@@ -101,19 +103,20 @@ $ gcloud run deploy {アプリ名} \
 例
 
 ```bash
-$ gcloud run deploy cloud-run-xxxxx \
-    --image asia-northeast1-docker.pkg.dev/xxxxxxxxxxx/repo-xxxxxx-xxxxxxxx/ws-flask-app:latest \
-    --region asia-northeast1
+$ gcloud run deploy cloud-run-soga \
+    --image asia-northeast1-docker.pkg.dev/env95-cloudruntraining/repo-soga/ws-flask-app:latest \
+    --region asia-northeast1 \
     --port 8080
 ```
 
 記入欄
 
 ```bash
-$ gcloud run deploy cloud-run-xxxxx \
-    --image xxxxxxx \
-    --region asia-northeast1
-    --port 8080
+$ gcloud run deploy cloud-run-soga \
+    --image asia-northeast1-docker.pkg.dev/env95-cloudruntraining/repo-soga/ws-flask-app:latest \
+    --region asia-northeast1 \
+    --port 8080 \
+    --project env95-cloudruntraining
 ```
 
 ## Cloud Runで立ち上がっているアプリにアクセス
@@ -131,5 +134,5 @@ $ gcloud run services proxy cloud-run-xxxxxx --region asia-northeast1
 記入欄
 
 ```bash
-$ gcloud run services proxy xxxxxx --region asia-northeast1
+$ gcloud run services proxy cloud-run-soga --region asia-northeast1 --project env95-cloudruntraining --port 8082
 ```
